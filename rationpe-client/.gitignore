@@ -1,7 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/dist
+# Keeping /dist, for easy deployment. Till my vps has enough ram to do on its own
+# /dist
 /tmp
 /out-tsc
 # Only exists if Bazel was run
