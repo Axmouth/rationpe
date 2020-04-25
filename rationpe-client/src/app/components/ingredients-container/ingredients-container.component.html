@@ -1,0 +1,105 @@
+<button mat-raised-button color="primary" (click)="addIngredient()">+ Add</button>
+<br />
+<br />
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8" #ingredientsTable>
+  <!-- Name Column -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Ingredient</th>
+    <td mat-cell *matCellDef="let element">
+      <mat-form-field>
+        <input
+          matInput
+          [formControl]="element.nameControl"
+          [errorStateMatcher]="element.nameMatcher"
+          placeholder="What's it called"
+        />
+        <mat-error *ngIf="!element.nameControl.hasError('required') || !element.nameControl.hasError('minLength')">
+          Please enter a valid ingredient name
+        </mat-error>
+      </mat-form-field>
+    </td>
+  </ng-container>
+
+  <!-- Quantity Column -->
+  <ng-container matColumnDef="quantity">
+    <th mat-header-cell *matHeaderCellDef>Ingredient Quantity</th>
+    <td mat-cell *matCellDef="let element">
+      <mat-form-field>
+        <input
+          matInput
+          type="number"
+          [formControl]="element.quantityControl"
+          [errorStateMatcher]="element.quantityMatcher"
+          (change)="updateValues()"
+          placeholder="In the recipe"
+        />
+        <mat-error *ngIf="!element.quantityControl.hasError('required')">
+          Please enter a quantity
+        </mat-error>
+        <mat-error *ngIf="!element.quantityControl.hasError('min')">
+          Please enter a number above 0
+        </mat-error>
+        <mat-error *ngIf="!element.quantityControl.hasError('number')">
+          Please enter a valid number
+        </mat-error>
+      </mat-form-field>
+    </td>
+  </ng-container>
+
+  <!-- Quantity Type Column -->
+  <ng-container matColumnDef="type">
+    <th mat-header-cell *matHeaderCellDef>Quantity Type</th>
+    <td mat-cell *matCellDef="let element">
+      <mat-select [formControl]="element.typeControl" [errorStateMatcher]="element.typeMatcher">
+        <mat-option *ngFor="let measurementUnit of measurementUnits" [value]="measurementUnit.value">
+          {{ measurementUnit.value }}
+          <span *ngIf="measurementUnit.value !== measurementUnit.viewValue">({{ measurementUnit.viewValue }})</span>
+        </mat-option>
+      </mat-select>
+    </td>
+  </ng-container>
+
+  <!-- Quantity Target Column -->
+  <ng-container matColumnDef="target">
+    <th mat-header-cell *matHeaderCellDef>Quantity Target</th>
+    <td mat-cell *matCellDef="let element">
+      <mat-form-field>
+        <input
+          matInput
+          type="number"
+          [formControl]="element.targetControl"
+          [errorStateMatcher]="element.targetMatcher"
+          (change)="updateFactor(element)"
+          placeholder="How much to use"
+        />
+        <mat-error *ngIf="!element.targetControl.hasError('required')">
+          Please enter a quantity
+        </mat-error>
+        <mat-error *ngIf="!element.targetControl.hasError('min')">
+          Please enter a number above 0
+        </mat-error>
+        <mat-error *ngIf="!element.targetControl.hasError('number')">
+          Please enter a valid number
+        </mat-error>
+      </mat-form-field>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Action</th>
+    <td mat-cell *matCellDef="let element">
+      <button
+        mat-icon-button
+        matTooltip="Click to Delete"
+        class="iconbutton"
+        color="warn"
+        (click)="removeIngredient(element)"
+      >
+        <mat-icon aria-label="Delete">delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
